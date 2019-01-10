@@ -21,14 +21,18 @@ def main(argv):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()
-        conn, addr = s.accept()
-        with conn:
-            print('Connected by', addr)
-            while True:
-                data = conn.recv(1024)
-                if not data:
-                    break
-                conn.sendall(data)
+        while True:
+            conn, addr = s.accept()
+            with conn:
+                print('Connected by', addr)
+                while True:
+                    mybytes = conn.recv(1024)
+                    responsestr=mybytes.decode()
+                    print('[-->] Received: '+responsestr)
+                    if not mybytes:
+                        break
+                    print('[<--] Sending: '+responsestr)
+                    conn.sendall(mybytes)
 
 ### EXEC #######################################################################
 if __name__ == "__main__":
